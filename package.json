@@ -1,5 +1,5 @@
 {
-  "name": "sensedata-wallet",
+  "name": "sen-finance",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,12 +7,15 @@
     "dev": "vite --port --open --host --port 3000",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "commit": "git add . && git cz"
   },
   "dependencies": {
+    "@mui/icons-material": "^5.14.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.14.2"
+    "react-router-dom": "^6.14.2",
+    "styled-components": "^6.0.7"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

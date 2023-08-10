@@ -60,7 +60,7 @@ function WalletProvider({ children }: { children: React.ReactNode }) {
     default:
       return wallets;
     }
-  }, [selectedFilter, wallets]);
+  }, [selectedFilter]);
 
   useEffect(() => {
     const filteredWallets = filterByType();
