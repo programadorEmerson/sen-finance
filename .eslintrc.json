@@ -15,6 +15,7 @@
         "sourceType": "module"
     },
     "plugins": [
+        "unused-imports",
         "react-hooks",
         "@typescript-eslint",
         "eslint-plugin-import-helpers",
@@ -48,7 +49,13 @@
                 ]
             }
         ],
-        "indent": ["error", 2],
+        "indent": [
+            "error",
+            2
+        ],
+        "unused-imports/no-unused-imports": [
+            "error"
+        ],
         "react-hooks/rules-of-hooks": "error",
         "@typescript-eslint/explicit-function-return-type": 0,
         "@typescript-eslint/explicit-module-boundary-types": "off",
@@ -60,15 +67,24 @@
         "semi": "error",
         "import-helpers/order-imports": [
             "warn",
-            { 
+            {
                 "newlinesBetween": "always",
                 "groups": [
-                    ["/^react/"],
+                    [
+                        "/^react*/"
+                    ],
                     "/components/",
                     "/^@shared/",
-                    ["parent", "sibling", "index"]
+                    [
+                        "parent",
+                        "sibling",
+                        "index"
+                    ]
                 ],
-                "alphabetize": { "order": "asc", "ignoreCase": true }
+                "alphabetize": {
+                    "order": "asc",
+                    "ignoreCase": true
+                }
             }
         ]
     }
