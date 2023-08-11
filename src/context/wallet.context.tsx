@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { createContext, useState, useCallback, useEffect } from 'react';
 
 import { UserProps, WalletAppProps, WalletProps } from '@/@types/wallet.type';
@@ -15,7 +16,7 @@ function WalletProvider({ children }: { children: React.ReactNode }) {
     exit: true,
   });
 
-  const [storedValue, updateUser, updateWallet, removeWallet, restoreStorage, createWallet] = useLocalStorage('wallet');
+  const [storedValue, updateUser, _updateWallet, removeWallet, restoreStorage, createWallet] = useLocalStorage('wallet');
 
   const checkFilter = useCallback((type: TypeWalletEnum) => {
     if (type === TypeWalletEnum.ENTRANCE) {
