@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 
 import InputElement from '@/components/Input';
 
@@ -50,6 +50,12 @@ const WalletForm:FC<WalletFormProps> = ({ onClose }) => {
       onClose();
     },
   });
+
+  useEffect(() => {
+    return () => {
+      formik.resetForm();
+    };
+  }, []);
 
   return (
     <StyledForm onSubmit={formik.handleSubmit} onBlur={formik.handleBlur}>
