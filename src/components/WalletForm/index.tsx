@@ -6,6 +6,7 @@ import InputSelect from '../select';
 import { StyledForm } from './styles';
 
 import { WalletProps } from '@/@types/wallet.type';
+import { CategoryWalletEnum, TypeWalletEnum } from '@/enums/wallet.enum';
 import useWalletContext from '@/hooks/useWalletContext';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -23,9 +24,9 @@ type WalletForm = {
 
 const initialValues: WalletForm = { 
   title: '',
-  type: '',
-  category: '',
-  value: 0,
+  type: TypeWalletEnum.ENTRANCE,
+  category: CategoryWalletEnum.OTHERS,
+  value: 1,
 };
 
 const validationSchema = yup.object<WalletProps>({
