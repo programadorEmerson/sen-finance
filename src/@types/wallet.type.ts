@@ -24,6 +24,7 @@ type WalletAppProps = {
     deleteWallet: (id: number) => void;
     selectWallet: (id: number) => void;
     newWallet: (wallet: WalletProps) => void;
+    modifyWallet: (wallet: WalletProps) => void;
     calculateValues: (type: TypeWalletEnum) => number;
     handleSelectFilter: (type: string) => void;
 };

@@ -16,7 +16,7 @@ function WalletProvider({ children }: { children: React.ReactNode }) {
     exit: true,
   });
 
-  const [storedValue, updateUser, _updateWallet, removeWallet, restoreStorage, createWallet] = useLocalStorage('wallet');
+  const [storedValue, updateUser, updateWallet, removeWallet, restoreStorage, createWallet] = useLocalStorage('wallet');
 
   const checkFilter = useCallback((type: TypeWalletEnum) => {
     if (type === TypeWalletEnum.ENTRANCE) {
@@ -51,6 +51,11 @@ function WalletProvider({ children }: { children: React.ReactNode }) {
     setSelectedWallet(wallet);
   };
 
+  const modifyWallet = (wallet: WalletProps) => {
+    updateWallet(wallet);
+    setSelectedWallet(null);
+  };
+
   const calculateValues = useCallback((type: TypeWalletEnum): number => {
     return wallets.reduce((acc, wallet) => {
       return wallet.type === type ? acc + wallet.value : acc;
@@ -80,41 +85,6 @@ function WalletProvider({ children }: { children: React.ReactNode }) {
   }, [checkboxSelected]);
 
   useEffect(() => {
-    // newWallet({
-    //   id: 1,
-    //   title: 'Salário Mes 06/2023',
-    //   category: CategoryWalletEnum.FOOD,
-    //   type: TypeWalletEnum.ENTRANCE,
-    //   value: 10350.48,
-    //   createdAt: new Date().toISOString(),
-    // });
-    // newWallet({
-    //   id: 1,
-    //   title: 'Pagamento de pacela do carro',
-    //   category: CategoryWalletEnum.FOOD,
-    //   type: TypeWalletEnum.EXIT,
-    //   value: 350.35,
-    //   createdAt: new Date().toISOString(),
-    // });
-    // newWallet({
-    //   id: 1,
-    //   title: 'Freela desenvolvimento',
-    //   category: CategoryWalletEnum.OTHERS,
-    //   type: TypeWalletEnum.ENTRANCE,
-    //   value: 1550.98,
-    //   createdAt: new Date().toISOString(),
-    // });
-    // newWallet({
-    //   id: 1,
-    //   title: 'Saidinha com a Elaine',
-    //   category: CategoryWalletEnum.HEALTH,
-    //   type: TypeWalletEnum.EXIT,
-    //   value: 100.48,
-    //   createdAt: new Date().toISOString(),
-    // });
-  }, []);
-
-  useEffect(() => {
     let filtered = filterByType(storedValue.wallets);
     if (selectedFilter) {
       filtered = filtered.filter((wallet) =>
@@ -138,6 +108,7 @@ function WalletProvider({ children }: { children: React.ReactNode }) {
     handleSelectFilter,
     calculateBalance,
     checkboxSelected,
+    modifyWallet,
     checkFilter,
   };
 

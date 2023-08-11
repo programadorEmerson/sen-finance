@@ -12,7 +12,7 @@ const INITIAL_VALUE: StorageProps = { wallets: [], user: null };
 const useLocalStorage = (key: string): [
   StorageProps,
   (user: UserProps) => void,
-  (wallets: WalletProps[]) => void,
+  (wallet: WalletProps) => void,
   (id: number) => void,
   () => void,
   (wallet: WalletProps) => void,
@@ -48,8 +48,13 @@ const useLocalStorage = (key: string): [
     updateValue({ user });
   };
 
-  const updateWallet = (wallets: WalletProps[]) => {
-    updateValue({ wallets: [...storedValue.wallets, ...wallets] });
+  const updateWallet = (wallet: WalletProps) => {
+    updateValue({
+      wallets: storedValue.wallets.map((item) => {
+        if (item.id === wallet.id) return wallet;
+        return item;
+      }),
+    });
   };
 
   const removeWallet = (id: number) => {

@@ -13,7 +13,7 @@ type RowTableProps = {
 const RowTable: FC<RowTableProps> = ({ wallet }) => {
   const { createdAt, title, category, type, value } = wallet;
 
-  const { deleteWallet } = useWalletContext();
+  const { deleteWallet, selectWallet } = useWalletContext();
   return (
     <div className="row-table">
       <div className="row-table__date">
@@ -37,7 +37,7 @@ const RowTable: FC<RowTableProps> = ({ wallet }) => {
         <span>{type}</span>
       </div>
       <div className="row-table__actions">
-        <button className="edit-button">
+        <button onClick={() => selectWallet(wallet.id)} className="edit-button">
           <img src={ImagesEnum.ICON_EDIT} alt="" />
         </button>
         <button onClick={() => deleteWallet(wallet.id)} className="delete-button">

@@ -8,6 +8,7 @@ import { StyledForm } from './styles';
 import { WalletProps } from '@/@types/wallet.type';
 import { CategoryWalletEnum, TypeWalletEnum } from '@/enums/wallet.enum';
 import useWalletContext from '@/hooks/useWalletContext';
+import Notify from '@/utils/AlertNotificationCenter';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
@@ -34,16 +35,25 @@ const validationSchema = yup.object<WalletProps>({
 
 const WalletForm:FC = () => {
 
-  const { newWallet } = useWalletContext();
+  const { newWallet, modifyWallet, selectedWallet } = useWalletContext();
 
   const formik = useFormik({
     enableReinitialize: true,
     validationSchema: validationSchema,
     initialValues: initialValues,
     onSubmit: async (values) => {
-      const walletData = { ...values, id: 0, createdAt: new Date().toISOString() };
-      newWallet(walletData as WalletProps);
+      const walletData = selectedWallet ? values : { ...values, id: 0, createdAt: new Date().toISOString() };
+      const message = `Despesa ${walletData ? 'editada' : 'cadastrada'} com sucesso!`;
+      if (selectedWallet) {
+        modifyWallet(walletData as WalletProps);
+      } else {
+        newWallet(walletData as WalletProps);
+      }
       formik.resetForm();
+      Notify({
+        icon: 'success',
+        text: message,
+      });
     },
   });
 
@@ -53,11 +63,17 @@ const WalletForm:FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (selectedWallet) {
+      formik.setValues(selectedWallet);
+    }
+  }, [selectedWallet]);
+
   return (
     <StyledForm onSubmit={formik.handleSubmit} onBlur={formik.handleBlur}>
       <div className='content-form'>
         <span>
-          - Incluir novo registro
+          {`- ${selectedWallet ? 'Editar' : 'Incluir novo'} registro`}
         </span>
         <InputElement
           keyName='title'
@@ -97,7 +113,9 @@ const WalletForm:FC = () => {
           mt={0}
           size='10%'
         />
-        <button style={{ width: '25%' }} className='submit-button' type="submit">Adicionar despesa</button>
+        <button style={{ width: '25%' }} className='submit-button' type="submit">
+          {selectedWallet ? 'Salvar alterações' : 'Incluir registro'}
+        </button>
       </div>
     </StyledForm>
   );
