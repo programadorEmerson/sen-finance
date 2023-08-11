@@ -11,9 +11,20 @@ export const StyledFilters = styled('div')`
   border-bottom: 1px solid #323238;
   border-radius: 5px;
   padding: 0 20px 0 20px;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  position: relative;
+
+  span {
+    color: #c4c4cc;
+    position: absolute;
+    font-size: 15px;
+    top: -25px;
+    left: 5px;
+  }
 
   .category {
+    
     label {
       color: #c4c4cc;
       font-size: 15px;

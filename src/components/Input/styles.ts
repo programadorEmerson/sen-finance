@@ -5,7 +5,6 @@ export const StyledInput = styled('input')<{mt: number, valid: 'error' | 'valid'
     border: 2px solid ${({ valid }) => valid === 'error' ? '#EF5350' : '#ccc'};
     border-radius: 5px;
     font-size: 16px;
-    width: 100%;
     color: rgba(0, 123, 255, 0.8);
     font-weight: bold;
     height: 55px;

@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 
-export const StyledInput = styled('select')`
+export const StyledInputSelect = styled('select')`
     padding: 10px;
     border: 2px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
-    width: 100%;
     color: rgba(0, 123, 255, 0.8);
     font-weight: bold;
+    height: 55px;
 
     &:focus {
         outline: none;

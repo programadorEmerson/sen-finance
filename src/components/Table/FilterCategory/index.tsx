@@ -7,6 +7,9 @@ const FilterByCategory = () => {
   const { handleSelectFilter, selectedFilter } = useWalletContext();
   return (
     <StyledFilters>
+      <span>
+       - Selecione um filtro por categoria:
+      </span>
       {[...Object.values(CategoryWalletEnum), 'Todos'].map((category) => {
         return (
           <div className='category' key={category}>

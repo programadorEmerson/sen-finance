@@ -70,11 +70,11 @@ export const StyledHeader = styled('header')`
         height: 50px;
         width: 50px;
       }
-
-      span {
-        color: #fff;
-        margin-left: 10px;
-      }
+    }
+    
+    span {
+      color: #fff;
+      margin-left: 10px;
     }
 
     button {

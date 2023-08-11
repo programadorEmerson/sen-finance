@@ -11,10 +11,6 @@ import useWalletContext from '@/hooks/useWalletContext';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
-type WalletFormProps = {
-    onClose: () => void;
-};
-
 type WalletForm = {
   title: string;
   type: string;
@@ -36,7 +32,7 @@ const validationSchema = yup.object<WalletProps>({
   value: yup.number().min(0.01, 'Informe o valor') .required('Campo obrigatório'),
 });
 
-const WalletForm:FC<WalletFormProps> = ({ onClose }) => {
+const WalletForm:FC = () => {
 
   const { newWallet } = useWalletContext();
 
@@ -47,7 +43,7 @@ const WalletForm:FC<WalletFormProps> = ({ onClose }) => {
     onSubmit: async (values) => {
       const walletData = { ...values, id: 0, createdAt: new Date().toISOString() };
       newWallet(walletData as WalletProps);
-      onClose();
+      formik.resetForm();
     },
   });
 
@@ -59,38 +55,50 @@ const WalletForm:FC<WalletFormProps> = ({ onClose }) => {
 
   return (
     <StyledForm onSubmit={formik.handleSubmit} onBlur={formik.handleBlur}>
-      <InputElement
-        keyName='title'
-        formik={formik}
-        type='text'
-        placeholder='Descrição'
-        mt={0}
-      />
-      <InputSelect
-        option="Entrada"
-        keyName='category'
-        formik={formik}
-        type='text'
-        placeholder='Categoria'
-        mt={0}
-      />
-      <InputSelect
-        option="Saída"
-        keyName='type'
-        formik={formik}
-        type='text'
-        placeholder='Option'
-        mt={0}
-      />
-      <InputElement
-        keyName='value'
-        formik={formik}
-        type='number'
-        placeholder='Tipo'
-        mt={0}
-      />
-      <button className='submit-button' type="submit">Submit</button>
-      <button className='cancel-button' onClick={onClose} type="submit">Cancelar</button>
+      <div className='content-form'>
+        <span>
+          - Incluir novo registro
+        </span>
+        <InputElement
+          keyName='title'
+          formik={formik}
+          type='text'
+          placeholder='Descrição'
+          mt={0}
+          size='35%'
+        />
+        <div style={{ width: '15%', marginTop: '-3px' }}>
+          <InputSelect
+            option="Entrada"
+            keyName='type'
+            formik={formik}
+            type='text'
+            placeholder='Categoria'
+            mt={0}
+            size='100%'
+          />
+        </div>
+        <div style={{ width: '15%', marginTop: '-3px' }}>
+          <InputSelect
+            option="Saída"
+            keyName='category'
+            formik={formik}
+            type='text'
+            placeholder='Option'
+            mt={0}
+            size='100%'
+          />
+        </div>
+        <InputElement
+          keyName='value'
+          formik={formik}
+          type='number'
+          placeholder='Tipo'
+          mt={0}
+          size='10%'
+        />
+        <button style={{ width: '25%' }} className='submit-button' type="submit">Adicionar despesa</button>
+      </div>
     </StyledForm>
   );
 };
