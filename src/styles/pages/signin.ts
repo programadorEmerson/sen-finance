@@ -42,6 +42,14 @@ export const StyledSignin = styled('div')`
     height: 60%;
     box-shadow: 0px 0px 5px 4px rgba(0,0,0,0.2);
 
+    .error-message {
+      width: 100%;
+      color: #EF5350;
+      font-size: 13px;
+      margin-top: 5px;
+      margin-left: 20px;
+    }
+
     .actions {
       display: flex;
       width: 100%;

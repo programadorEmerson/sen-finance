@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { UserProps, WalletProps } from '@/@types/wallet.type';
 
@@ -9,27 +9,30 @@ type StorageProps = {
 
 const INITIAL_VALUE: StorageProps = { wallets: [], user: null };
 
-// A função useLocalStorage aceita uma chave (key) como entrada e retorna array com 5 elementos:
 const useLocalStorage = (key: string): [
-  // Elemento 1: O tipo de retorno da função useLocalStorage é um objeto com propriedades de armazenamento (user e wallets).
   StorageProps,
-
-  // Elemento 2: Uma função para atualizar o usuário no armazenamento com base em um novo objeto UserProps.
   (user: UserProps) => void,
-
-  // Elemento 3: Uma função para adicionar carteiras ao armazenamento com base em um array de objetos WalletProps.
   (wallets: WalletProps[]) => void,
-
-  // Elemento 4: Uma função para remover uma carteira com base em um ID numérico.
   (id: number) => void,
-
-  // Elemento 5: Uma função para restaurar o armazenamento para seus valores iniciais.
   () => void,
+  (wallet: WalletProps) => void,
 ] => {
-  const [storedValue, setStoredValue] = useState<StorageProps>(INITIAL_VALUE);
+  const [storedValue, setStoredValue] = useState<StorageProps>(() =>{
+    const item = localStorage.getItem(key);
+    if (item) return JSON.parse(item);
+    return INITIAL_VALUE;
+  });
 
   const updateStorage = (value: StorageProps) => {
     localStorage.setItem(key, JSON.stringify(value));
+  };
+
+  const createWallet = (wallet: WalletProps) => {
+    const hasWallet = storedValue.wallets.length > 0;
+    const newId = hasWallet ? storedValue.wallets[storedValue.wallets.length - 1].id + 1 : 1;
+    const updatedWallet = { ...storedValue, wallets: [...storedValue.wallets, { ...wallet, id: newId }] };
+    updateStorage(updatedWallet);
+    setStoredValue(updatedWallet);
   };
 
   const updateValue = (updates: Partial<StorageProps>) => {
@@ -59,20 +62,7 @@ const useLocalStorage = (key: string): [
     updateValue(INITIAL_VALUE);
   };
 
-  useEffect(() => {
-    const item = localStorage.getItem(key);
-
-    if (item) {
-      setStoredValue((prev) => {
-        return { 
-          ...prev, 
-          ...JSON.parse(item), 
-        };
-      });
-    }
-  }, [key]);
-
-  return [storedValue, updateUser, updateWallet, removeWallet, restoreStorage];
+  return [storedValue, updateUser, updateWallet, removeWallet, restoreStorage, createWallet];
 };
 
 export default useLocalStorage;

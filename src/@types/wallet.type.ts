@@ -14,7 +14,10 @@ type UserProps = { email: string } | null;
 type WalletAppProps = {
     user: UserProps;
     wallets: WalletProps[];
+    selectedFilter: string | null;
     selectedWallet: WalletProps | null;
+    checkboxSelected: {entrance: boolean, exit: boolean}
+    checkFilter: (type: TypeWalletEnum) => void;
     signout: () => void;
     calculateBalance: () => number;
     signin: (user: UserProps) => void;
@@ -22,7 +25,7 @@ type WalletAppProps = {
     selectWallet: (id: number) => void;
     newWallet: (wallet: WalletProps) => void;
     calculateValues: (type: TypeWalletEnum) => number;
-    handleSelectFilter: (type: TypeWalletEnum | 'all') => void;
+    handleSelectFilter: (type: string) => void;
 };
 
 export type { WalletProps, UserProps, WalletAppProps };

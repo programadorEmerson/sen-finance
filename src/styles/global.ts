@@ -7,6 +7,10 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     font-family: 'Chivo', sans-serif;
   }
+
+  span, img {
+    background-color: transparent;
+  }
 `;
 
 export default GlobalStyle;

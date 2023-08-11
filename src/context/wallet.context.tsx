@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState, useCallback } from 'react';
+import React, { createContext, useState, useCallback, useEffect } from 'react';
 
 import { UserProps, WalletAppProps, WalletProps } from '@/@types/wallet.type';
 import { TypeWalletEnum } from '@/enums/wallet.enum';
@@ -8,14 +8,29 @@ const WalletContext = createContext({} as WalletAppProps);
 
 function WalletProvider({ children }: { children: React.ReactNode }) {
   const [selectedWallet, setSelectedWallet] = useState<WalletProps | null>(null);
-  const [selectedFilter, setSelectedFilter] = useState<TypeWalletEnum | 'all'>('all');
+  const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
+  const [wallets, setWallets] = useState<WalletProps[]>([]);
+  const [checkboxSelected, setCheckboxSelected] = useState<{entrance: boolean, exit: boolean}>({
+    entrance: true,
+    exit: true,
+  });
 
-  const [storedValue, updateUser, updateWallet, removeWallet, restoreStorage] = useLocalStorage('wallet');
-  const wallets = storedValue.wallets;
+  const [storedValue, updateUser, updateWallet, removeWallet, restoreStorage, createWallet] = useLocalStorage('wallet');
+
+  const checkFilter = useCallback((type: TypeWalletEnum) => {
+    if (type === TypeWalletEnum.ENTRANCE) {
+      setCheckboxSelected((prev) => {
+        return { ...prev, entrance: !prev.entrance };
+      });
+    } else {
+      setCheckboxSelected((prev) => {
+        return { ...prev, exit: !prev.exit };
+      });
+    }
+  }, []);
 
   const newWallet = (wallet: WalletProps) => {
-    const newWallets = [...wallets, wallet];
-    updateWallet(newWallets);
+    createWallet(wallet);
   };
 
   const deleteWallet = (id: number) => {
@@ -47,28 +62,70 @@ function WalletProvider({ children }: { children: React.ReactNode }) {
     return entrance - exit;
   };
 
-  const handleSelectFilter = (type: TypeWalletEnum | 'all') => {
-    setSelectedFilter(type);
+  const handleSelectFilter = (type: string) => {
+    setSelectedFilter(type === 'Todos' ? null : type);
   };
 
-  const filterByType = useCallback(() => {
-    switch (selectedFilter) {
-    case TypeWalletEnum.ENTRANCE:
-      return wallets.filter((wallet) => wallet.type === TypeWalletEnum.ENTRANCE);
-    case TypeWalletEnum.EXIT:
-      return wallets.filter((wallet) => wallet.type === TypeWalletEnum.EXIT);
-    default:
+  const filterByType = useCallback((wallets: WalletProps[]) => {
+    if (checkboxSelected.entrance && checkboxSelected.exit) {
       return wallets;
+    } else if (checkboxSelected.entrance && !checkboxSelected.exit) {
+      return wallets.filter((wallet) => wallet.type !== TypeWalletEnum.EXIT);
+    } else if (!checkboxSelected.entrance && checkboxSelected.exit) {
+      return wallets.filter((wallet) => wallet.type !== TypeWalletEnum.ENTRANCE);
+    } else {
+      return [];
     }
-  }, [selectedFilter]);
+  }, [checkboxSelected]);
 
   useEffect(() => {
-    const filteredWallets = filterByType();
-    updateWallet(filteredWallets);
-  }, [selectedFilter, filterByType]);
+    // newWallet({
+    //   id: 1,
+    //   title: 'Salário Mes 06/2023',
+    //   category: CategoryWalletEnum.FOOD,
+    //   type: TypeWalletEnum.ENTRANCE,
+    //   value: 10350.48,
+    //   createdAt: new Date().toISOString(),
+    // });
+    // newWallet({
+    //   id: 1,
+    //   title: 'Pagamento de pacela do carro',
+    //   category: CategoryWalletEnum.FOOD,
+    //   type: TypeWalletEnum.EXIT,
+    //   value: 350.35,
+    //   createdAt: new Date().toISOString(),
+    // });
+    // newWallet({
+    //   id: 1,
+    //   title: 'Freela desenvolvimento',
+    //   category: CategoryWalletEnum.OTHERS,
+    //   type: TypeWalletEnum.ENTRANCE,
+    //   value: 1550.98,
+    //   createdAt: new Date().toISOString(),
+    // });
+    // newWallet({
+    //   id: 1,
+    //   title: 'Saidinha com a Elaine',
+    //   category: CategoryWalletEnum.HEALTH,
+    //   type: TypeWalletEnum.EXIT,
+    //   value: 100.48,
+    //   createdAt: new Date().toISOString(),
+    // });
+  }, []);
+
+  useEffect(() => {
+    let filtered = filterByType(storedValue.wallets);
+    if (selectedFilter) {
+      filtered = filtered.filter((wallet) =>
+        wallet.category === selectedFilter,
+      );
+    }
+    setWallets(filtered);
+  }, [checkboxSelected, selectedFilter, storedValue]);
 
   const sharedState = {
     user: storedValue.user,
+    selectedFilter,
     wallets,
     signin,
     signout,
@@ -79,6 +136,8 @@ function WalletProvider({ children }: { children: React.ReactNode }) {
     calculateValues,
     handleSelectFilter,
     calculateBalance,
+    checkboxSelected,
+    checkFilter,
   };
 
   return (
